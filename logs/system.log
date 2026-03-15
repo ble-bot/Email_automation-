@@ -1,0 +1,64 @@
+2026-03-14 18:38:41,034 - INFO - Iniciando Email Automation para Gmail...
+2026-03-14 18:38:41,409 - ERROR - Error al conectar a Gmail: 'ascii' codec can't encode character '\xf1' in position 12: ordinal not in range(128)
+2026-03-14 18:38:41,410 - ERROR - Fallo crítico en la conexión: 'ascii' codec can't encode character '\xf1' in position 12: ordinal not in range(128). Reintentando en el próximo intervalo.
+2026-03-14 18:38:41,414 - INFO - Esperando 300 segundos...
+2026-03-14 18:41:07,957 - INFO - Iniciando Email Automation para Gmail...
+2026-03-14 18:41:08,833 - INFO - Conectado a Gmail exitosamente.
+2026-03-14 18:41:08,834 - INFO - Buscando correos no leídos...
+2026-03-14 18:41:09,019 - INFO - No hay correos nuevos.
+2026-03-14 18:41:09,127 - INFO - Esperando 300 segundos...
+2026-03-14 18:47:14,862 - INFO - Iniciando Email Automation con Detección Automática (IDLE)...
+2026-03-14 18:47:15,750 - INFO - Conectado a Gmail exitosamente.
+2026-03-14 18:47:15,751 - INFO - Revisando correos pendientes...
+2026-03-14 18:47:16,711 - INFO - Procesando correo de: beleyyoyo02@gmail.com | Asunto: Asunto: Prueba automatización
+2026-03-14 18:47:17,554 - INFO - Datos guardados exitosamente en data/contactos.xlsx
+2026-03-14 18:47:17,555 - INFO - Contacto guardado: juan.perez@empresa.com
+2026-03-14 18:47:17,556 - INFO - Procesando correo de: beleyyoyo@gmail.com | Asunto: Contacto
+2026-03-14 18:47:17,632 - INFO - Datos guardados exitosamente en data/contactos.xlsx
+2026-03-14 18:47:17,633 - INFO - Contacto guardado: carlos.martinez@empresa.com
+2026-03-14 18:47:17,634 - INFO - Esperando nuevos correos (Modo Automático activo)...
+2026-03-14 18:49:18,115 - INFO - ¡Nuevo(s) correo(s) detectado(s)!
+2026-03-14 18:49:18,619 - INFO - Procesando correo de: beleyyoyo@gmail.com | Asunto: 
+2026-03-14 18:49:18,982 - INFO - Datos guardados exitosamente en data/contactos.xlsx
+2026-03-14 18:49:18,983 - INFO - Contacto guardado: carlos.martinez@empresa.com
+2026-03-14 18:49:49,662 - INFO - ¡Nuevo(s) correo(s) detectado(s)!
+2026-03-14 18:49:50,166 - INFO - Procesando correo de: beleyyoyo@gmail.com | Asunto: 
+2026-03-14 18:49:50,587 - INFO - Datos guardados exitosamente en data/contactos.xlsx
+2026-03-14 18:49:50,589 - INFO - Contacto guardado: juan.perez@empresa.com
+2026-03-14 18:51:21,080 - INFO - ¡Nuevo(s) correo(s) detectado(s)!
+2026-03-14 18:51:21,669 - INFO - Procesando correo de: beleyyoyo02@gmail.com | Asunto: Prueba múltiple
+2026-03-14 18:51:22,258 - INFO - Datos guardados exitosamente en data/contactos.xlsx
+2026-03-14 18:51:22,259 - INFO - Contacto guardado: ana.gomez@innovatech.com
+2026-03-14 18:54:52,637 - INFO - ¡Nuevo(s) correo(s) detectado(s)!
+2026-03-14 18:54:53,139 - INFO - Procesando correo de: beleyyoyo02@gmail.com | Asunto: 
+2026-03-14 18:54:53,687 - INFO - Datos guardados exitosamente en data/contactos.xlsx
+2026-03-14 18:54:53,688 - INFO - Contacto guardado: jose.ramirez@empresa.com
+2026-03-14 18:59:54,102 - INFO - ¡Nuevo(s) correo(s) detectado(s)!
+2026-03-14 18:59:54,607 - INFO - Procesando correo de: beleyyoyo@gmail.com | Asunto: 
+2026-03-14 18:59:54,920 - INFO - Datos guardados exitosamente en data/contactos.xlsx
+2026-03-14 18:59:54,921 - INFO - Contacto guardado: ana.gomez@innovatech.com
+2026-03-14 19:00:34,679 - INFO - Servicio detenido por el usuario.
+2026-03-14 19:00:34,942 - INFO - Conexión cerrada.
+2026-03-14 19:05:50,559 - INFO - Iniciando Email Automation V2.0 (Detección Robusta)...
+2026-03-14 19:05:50,561 - INFO - Conectando a Gmail...
+2026-03-14 19:05:51,490 - INFO - Conectado a Gmail exitosamente.
+2026-03-14 19:05:51,492 - INFO - Revisando correos pendientes...
+2026-03-14 19:05:51,597 - INFO - Esperando nuevos correos (IDLE activo)...
+2026-03-14 19:07:21,903 - INFO - ¡Nuevo correo detectado!
+2026-03-14 19:07:22,446 - INFO - Procesando correo de: beleyyoyo@gmail.com | Asunto: Contacto mixto
+2026-03-14 19:07:24,606 - INFO - Datos guardados exitosamente en data/contactos.xlsx
+2026-03-14 19:07:24,608 - INFO - Guardado: N/A <beleyyoyo@gmail.com>
+2026-03-14 19:09:54,926 - INFO - ¡Nuevo correo detectado!
+2026-03-14 19:09:55,398 - INFO - Procesando correo de: beleyyoyo@gmail.com | Asunto: Prueba firma larga
+2026-03-14 19:09:55,825 - INFO - Datos guardados exitosamente en data/contactos.xlsx
+2026-03-14 19:09:55,826 - INFO - Guardado: Andrés López <beleyyoyo@gmail.com>
+2026-03-14 19:13:56,349 - INFO - ¡Nuevo correo detectado!
+2026-03-14 19:13:57,325 - INFO - Procesando correo de: beleyyoyo@gmail.com | Asunto: Prueba papapap
+2026-03-14 19:13:58,235 - INFO - Datos guardados exitosamente en data/contactos.xlsx
+2026-03-14 19:13:58,236 - INFO - Guardado: N/A <beleyyoyo@gmail.com>
+2026-03-14 19:17:28,675 - INFO - ¡Nuevo correo detectado!
+2026-03-14 19:17:29,241 - INFO - Procesando correo de: beleyyoyo02@gmail.com | Asunto: 
+2026-03-14 19:17:29,998 - INFO - Datos guardados exitosamente en data/contactos.xlsx
+2026-03-14 19:17:29,999 - INFO - Guardado: N/A <beleyyoyo02@gmail.com>
+2026-03-14 19:20:26,483 - INFO - Deteniendo servicio...
+2026-03-14 19:20:26,701 - INFO - Conexión cerrada.

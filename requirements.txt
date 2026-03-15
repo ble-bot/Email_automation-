@@ -1,0 +1,10 @@
+pandas
+openpyxl
+pytesseract
+Pillow
+python-dotenv
+beautifulsoup4
+lxml
+imap-tools
+vobject
+google-generativeai

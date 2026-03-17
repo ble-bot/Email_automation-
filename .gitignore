@@ -1,6 +1,34 @@
-.env*
-__pycache__/
-*.pyc
-logs/*.log
-data/*.xlsx
+# Entorno y Secretos
+.env
+.venv/
+env/
+venv/
+ENV/
 
+# Datos Sensibles (PII)
+data/*.xlsx
+data/*.csv
+data/*.json
+!data/.gitkeep
+
+# Logs y Auditoría
+logs/*.log
+*.log
+
+# Python - Artefactos de ejecución
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Sistema y Otros
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.png
+*.jpg
+*.jpeg
+!app/static/

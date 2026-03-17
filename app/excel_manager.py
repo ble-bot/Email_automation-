@@ -1,64 +1,93 @@
 import pandas as pd
 import os
+from datetime import datetime
+from typing import List, Dict, Any
+
 from app.config import Config
 from app.logger import logger
 
 class ExcelManager:
+    """
+    Gestor de persistencia de datos en formato Microsoft Excel.
+    Se encarga de la lectura, escritura y sincronización de contactos,
+    garantizando la integridad de la información y evitando duplicados.
+    """
     def __init__(self):
-        self.file_path = Config.DATA_FILE
-        # Asegurar directorio
-        os.makedirs(os.path.dirname(self.file_path), exist_ok=True)
+        """Inicializa la ruta del archivo y asegura la existencia del directorio base."""
+        self.file_path: str = Config.DATA_FILE
+        try:
+            os.makedirs(os.path.dirname(self.file_path), exist_ok=True)
+        except OSError as e:
+            logger.error(f"Error al crear directorio de datos: {e}")
 
-    def save_contacts(self, new_data_list):
+    def save_contacts(self, new_data_list: List[Dict[str, Any]]) -> None:
         """
-        Guarda una lista de diccionarios en Excel, evitando duplicados y ordenando.
+        Registra una lista de nuevos contactos en el archivo maestro.
+        
+        Si el contacto ya existe (basado en el correo), actualiza los campos modificados.
+        Mantiene un sello de tiempo de la última actualización.
+        
+        Args:
+            new_data_list (List[Dict[str, Any]]): Lista de diccionarios con datos de contacto.
         """
         if not new_data_list:
             return
 
         try:
-            # Crear DataFrame con nuevos datos y columnas aseguradas
-            df_new = pd.DataFrame(new_data_list)
+            # Estructura de columnas definida para el reporte final
+            allowed_columns = ["institucion", "nombre", "puesto", "correo", "ultima_actualizacion"]
+            current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             
-            # Asegurar que existan todas las columnas clave aunque vengan vacías
-            expected_columns = ["nombre", "correo", "institucion", "puesto", "telefono", "web"]
-            for col in expected_columns:
-                if col not in df_new.columns:
-                    df_new[col] = "N/A"
-
-            # Cargar datos existentes si el archivo ya existe
+            # Carga de base de datos existente o creación de una nueva
             if os.path.exists(self.file_path):
-                try:
-                    df_existing = pd.read_excel(self.file_path)
-                    # Normalizar columnas del excel existente (por si es versión vieja)
-                    for col in expected_columns:
-                        if col not in df_existing.columns:
-                            df_existing[col] = "N/A"
-                            
-                    df_combined = pd.concat([df_existing, df_new], ignore_index=True)
-                except Exception:
-                    # Si el archivo está corrupto o ilegible, empezar de cero (haciendo backup)
-                    logger.warning("Archivo Excel corrupto o incompatible. Creando uno nuevo y respaldando el anterior.")
-                    os.rename(self.file_path, self.file_path + ".bak")
-                    df_combined = df_new
+                df_existing = pd.read_excel(self.file_path)
+                # Normalización de esquema
+                for col in allowed_columns:
+                    if col not in df_existing.columns:
+                        df_existing[col] = "N/A"
+                df_existing = df_existing[allowed_columns]
             else:
-                df_combined = df_new
+                df_existing = pd.DataFrame(columns=allowed_columns)
 
-            # Limpiar duplicados manteniendo el último
-            df_combined = df_combined.drop_duplicates(subset=['correo'], keep='last')
-            
-            # Ordenar
-            if 'institucion' in df_combined.columns:
-                df_combined = df_combined.sort_values(by='institucion', ascending=True)
+            for new_contact in new_data_list:
+                email = str(new_contact.get("correo", "N/A"))
+                if email == "N/A": continue
 
-            # Reordenar columnas para que queden bonitas
-            final_columns = [c for c in expected_columns if c in df_combined.columns] + \
-                            [c for c in df_combined.columns if c not in expected_columns]
-            df_combined = df_combined[final_columns]
+                # Verificación de existencia previa (Búsqueda por ID único: Correo)
+                existing_idx = df_existing.index[df_existing['correo'] == email].tolist()
 
-            # Guardar
-            df_combined.to_excel(self.file_path, index=False)
-            logger.info(f"Datos guardados exitosamente en {self.file_path}")
+                if existing_idx:
+                    idx = existing_idx[0]
+                    # Lógica de actualización selectiva para no sobreescribir con datos vacíos
+                    changed = False
+                    for field in ["nombre", "puesto", "institucion"]:
+                        new_val = str(new_contact.get(field, "N/A")).strip()
+                        old_val = str(df_existing.at[idx, field]).strip()
+                        if new_val != "N/A" and new_val != old_val:
+                            df_existing.at[idx, field] = new_val
+                            changed = True
+                    
+                    if changed:
+                        df_existing.at[idx, "ultima_actualizacion"] = current_time
+                        logger.info("Registro de contacto actualizado correctamente.")
+                else:
+                    # Inserción de nuevo registro
+                    new_row = {
+                        "nombre": str(new_contact.get("nombre", "N/A")),
+                        "correo": email,
+                        "institucion": str(new_contact.get("institucion", "N/A")),
+                        "puesto": str(new_contact.get("puesto", "N/A")),
+                        "ultima_actualizacion": current_time
+                    }
+                    df_existing = pd.concat([df_existing, pd.DataFrame([new_row])], ignore_index=True)
+                    logger.info("Nuevo registro de contacto añadido a la base de datos.")
+
+            # Organización alfabética por institución para facilitar la revisión manual
+            df_existing = df_existing.sort_values(by='institucion', ascending=True)
+
+            # Persistencia física en el sistema de archivos
+            df_existing.to_excel(self.file_path, index=False)
+            logger.info("Sincronización con archivo Excel finalizada con éxito.")
             
         except Exception as e:
-            logger.error(f"Error al guardar en Excel: {e}")
+            logger.error(f"Error en la gestión de persistencia Excel: {type(e).__name__}")

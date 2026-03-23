@@ -1,6 +1,6 @@
 import time
 import sys
-from imap_tools import AND, MailBox, MailMessage
+from imap_tools import AND, MailBox, MailMessage, MailMessageFlags
 from typing import Any
 
 from app.config import Config
@@ -9,7 +9,7 @@ from app.extractor import SignatureExtractor
 from app.excel_manager import ExcelManager
 from app.logger import logger
 
-def process_single_email(msg: MailMessage, manager: ExcelManager) -> None:
+def process_single_email(msg: MailMessage, manager: ExcelManager, mailbox: MailBox) -> None:
     """
     Coordina el procesamiento de un correo electrónico individual:
     extracción, validación y almacenamiento.
@@ -17,6 +17,7 @@ def process_single_email(msg: MailMessage, manager: ExcelManager) -> None:
     Args:
         msg (MailMessage): Objeto de mensaje recuperado vía IMAP.
         manager (ExcelManager): Instancia del gestor de persistencia.
+        mailbox (MailBox): Conexión activa para marcar el correo como visto.
     """
     try:
         # Por privacidad de datos: No se registra información sensible de remitentes en los logs.
@@ -33,15 +34,19 @@ def process_single_email(msg: MailMessage, manager: ExcelManager) -> None:
             # Persistencia de datos en el gestor de Excel
             manager.save_contacts([contact_info])
             logger.info(f"Contacto de '{contact_info['correo']}' guardado correctamente.")
+            # Marcar el correo como leído usando el UID y el objeto mailbox
+            mailbox.flag(msg.uid, MailMessageFlags.SEEN, True)
         else:
             missing = [f for f in required_fields if contact_info.get(f) == "N/A"]
             logger.warning(f"Contacto descartado por información incompleta ({', '.join(missing)}).")
         
-        # Gestión de Rate Limit: Pausa prudencial para la API de IA
-        time.sleep(5)
-        
     except Exception as e:
         logger.error(f"Error durante el procesamiento del mensaje: {type(e).__name__}")
+    
+    finally:
+        # Gestión de Rate Limit para evitar sobrecargar la API de IA.
+        # Siempre se ejecuta, incluso si hubo errores en el procesamiento.
+        time.sleep(Config.API_RATE_LIMIT_SECONDS)
 
 def main() -> None:
     """
@@ -66,8 +71,8 @@ def main() -> None:
             # Procesamiento de la bandeja de entrada (correos no leídos)
             logger.info("Sincronizando mensajes pendientes...")
             try:
-                for msg in mailbox.fetch(AND(seen=False), mark_seen=True):
-                    process_single_email(msg, manager)
+                for msg in mailbox.fetch(AND(seen=False), mark_seen=False):
+                    process_single_email(msg, manager, mailbox)
             except Exception as e:
                 logger.error(f"Fallo en la sincronización inicial: {type(e).__name__}")
 
@@ -80,8 +85,8 @@ def main() -> None:
                     
                     if responses:
                         logger.info("Evento de nuevo correo recibido.")
-                        for msg in mailbox.fetch(AND(seen=False), mark_seen=True):
-                            process_single_email(msg, manager)
+                        for msg in mailbox.fetch(AND(seen=False), mark_seen=False):
+                            process_single_email(msg, manager, mailbox)
                     
                 except KeyboardInterrupt:
                     raise

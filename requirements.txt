@@ -10,3 +10,4 @@ imap-tools>=1.5.0
 vobject>=0.9.6
 opencv-python>=4.8.0.0
 spacy>=3.6.0
+pytest==7.4.3

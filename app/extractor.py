@@ -5,8 +5,6 @@ import requests
 import pytesseract
 import io
 import time
-import cv2
-import numpy as np
 import base64
 from PIL import Image
 from bs4 import BeautifulSoup
@@ -17,6 +15,15 @@ from app.config import Config
 from app.logger import logger
 from app.utils import sanitize_text_field
 import spacy
+
+# Intentar importar librerías de visión por computadora de forma opcional
+try:
+    import cv2
+    import numpy as np
+    HAS_CV2 = True
+except ImportError:
+    HAS_CV2 = False
+    logger.warning("OpenCV (cv2) o numpy no encontrados. La extracción de texto de imágenes (OCR) estará limitada.")
 
 class SignatureExtractor:
     """
@@ -247,6 +254,9 @@ class SignatureExtractor:
         """
         Procesa adjuntos de imagen mediante OCR (Tesseract) con preprocesamiento OpenCV.
         """
+        if not HAS_CV2:
+            return "" # Retornar vacío si no hay OpenCV para preprocesar
+
         ocr_text = ""
         for att in msg.attachments:
             if att.content_type.startswith('image/') and att.size < 3000000: # Límite aumentado a 3MB

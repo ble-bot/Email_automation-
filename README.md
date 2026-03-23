@@ -91,8 +91,10 @@ Asegúrate de tener instalado:
 
 1.  **Clonar el Repositorio (si aún no lo has hecho):**
     ```bash
-    git clone git@github.com:ble-bot/Email_automation-.git
+    git clone git@github.com:ble-bot/Email_automation-.github
     cd email_automation
+=======
+    cd Email_automation-
     ```
 
 2.  **Instalación de Dependencias del Sistema Operativo:**

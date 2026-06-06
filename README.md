@@ -180,5 +180,3 @@ Las contribuciones son bienvenidas. Si deseas mejorar este proyecto:
 Distribuido bajo la Licencia MIT. Consulta `LICENSE` para más información.
 
 ---
-
-_Desarrollado con ❤️ y 🤖 por Beley Gomez U._
